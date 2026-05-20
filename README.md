@@ -1,6 +1,6 @@
 # Praveen Bandi — Personal Site
 
-> Deployed at **[folium.vercel.app](https://folium.vercel.app)**
+> Deployed at **[praveenbandi.vercel.app](https://praveenbandi.vercel.app/)**
 
 A Renaissance-inspired personal portfolio, built with vanilla HTML, CSS, and JavaScript. No frameworks, no dependencies — just craft.
 
