@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
@@ -70,18 +71,43 @@
       text-decoration: none;
       transition: color 0.3s;
       cursor: crosshair;
+      position: relative;
+      /* fixed width so layout doesn't shift when text swaps */
+      display: inline-block;
     }
 
     nav a:hover { color: var(--gold); }
 
-    nav a {
-      position: relative;
+    /* ── Label cycling animation ── */
+    /*
+      Each cycle = 5s total
+      0%–40%   → Italian visible
+      40%–50%  → crossfade out Italian / in English
+      50%–90%  → English visible
+      90%–100% → crossfade out English / in Italian
+    */
+    @keyframes show-it {
+      0%   { opacity: 1; }
+      40%  { opacity: 1; }
+      50%  { opacity: 0; }
+      90%  { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes show-en {
+      0%   { opacity: 0; }
+      40%  { opacity: 0; }
+      50%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { opacity: 0; }
     }
 
     nav a .nav-it,
     nav a .nav-en {
       display: inline-block;
-      transition: opacity 0.25s ease;
+      animation-duration: 5s;
+      animation-timing-function: ease-in-out;
+      animation-iteration-count: infinite;
     }
 
     nav a .nav-en {
@@ -89,17 +115,30 @@
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
-      opacity: 0;
       white-space: nowrap;
     }
 
-    nav a:hover .nav-it {
-      opacity: 0;
-    }
+    nav a .nav-it { animation-name: show-it; }
+    nav a .nav-en { animation-name: show-en; }
 
-    nav a:hover .nav-en {
-      opacity: 1;
-    }
+    /* Stagger each nav item so they don't all flip in sync */
+    nav a:nth-child(1) .nav-it,
+    nav a:nth-child(1) .nav-en { animation-delay: 0s; }
+
+    nav a:nth-child(2) .nav-it,
+    nav a:nth-child(2) .nav-en { animation-delay: -0.8s; }
+
+    nav a:nth-child(3) .nav-it,
+    nav a:nth-child(3) .nav-en { animation-delay: -1.6s; }
+
+    nav a:nth-child(4) .nav-it,
+    nav a:nth-child(4) .nav-en { animation-delay: -2.4s; }
+
+    nav a:nth-child(5) .nav-it,
+    nav a:nth-child(5) .nav-en { animation-delay: -3.2s; }
+
+    nav a:nth-child(6) .nav-it,
+    nav a:nth-child(6) .nav-en { animation-delay: -4.0s; }
 
     /* ── SECTION BASE ── */
     section {
@@ -597,10 +636,12 @@
       .codex-page:first-child { border-right: 1px solid #c0a870; border-bottom: 2px solid #8a6a40; }
     }
   </style>
+
 </head>
 <body>
 
   <!-- NAV -->
+
   <nav>
     <a href="#pittura"><span class="nav-it">Pittore</span><span class="nav-en">Painter</span></a>
     <a href="#anatomia"><span class="nav-it">Scienziato</span><span class="nav-en">Scientist</span></a>
@@ -613,30 +654,35 @@
   <!-- ═══════════════════════════════════════════
        HERO
   ════════════════════════════════════════════ -->
+
   <section id="hero">
 
-    <!-- Vitruvian Man background image -->
-    <img
-      class="hero-bg-circle"
-      src="https://upload.wikimedia.org/wikipedia/commons/2/22/Da_Vinci_Vitruve_Luc_Viatour.jpg"
-      alt=""
-      aria-hidden="true"
-    />
+```
+<!-- Vitruvian Man background image -->
+<img
+  class="hero-bg-circle"
+  src="https://upload.wikimedia.org/wikipedia/commons/2/22/Da_Vinci_Vitruve_Luc_Viatour.jpg"
+  alt=""
+  aria-hidden="true"
+/>
 
-    <p class="hero-years reveal">✦ &ensp; MCMXCII — <span style="font-family: 'IM Fell English', serif; font-style: normal; letter-spacing: 0; font-size: 1.1em; vertical-align: -0.05em;">∞</span> &ensp; ✦</p>
-    <div class="hero-rule"></div>
-    <h1 class="hero-name reveal reveal-delay-1">Praveen Bandi</h1>
-    <div class="hero-rule"></div>
-    <p class="hero-subtitle reveal reveal-delay-2">
-      "I have been impressed with the urgency of doing. Knowing is not enough;<br>
-      we must apply. Being willing is not enough; we must do."
-    </p>
-    <span class="mirror reveal reveal-delay-3">Il genio che non conosce confini</span>
+<p class="hero-years reveal">✦ &ensp; MCMXCII — <span style="font-family: 'IM Fell English', serif; font-style: normal; letter-spacing: 0; font-size: 1.1em; vertical-align: -0.05em;">∞</span> &ensp; ✦</p>
+<div class="hero-rule"></div>
+<h1 class="hero-name reveal reveal-delay-1">Praveen Bandi</h1>
+<div class="hero-rule"></div>
+<p class="hero-subtitle reveal reveal-delay-2">
+  "I have been impressed with the urgency of doing. Knowing is not enough;<br>
+  we must apply. Being willing is not enough; we must do."
+</p>
+<span class="mirror reveal reveal-delay-3">Il genio che non conosce confini</span>
+```
+
   </section>
 
   <!-- ═══════════════════════════════════════════
        PAINTING
   ════════════════════════════════════════════ -->
+
   <section id="pittura">
     <p class="section-label reveal">I — Pittore</p>
     <h2 class="reveal reveal-delay-1">The Painted Soul</h2>
@@ -648,85 +694,89 @@
       "Painting is poetry that is seen rather than felt, and poetry is painting that is felt rather than seen."
     </p>
 
-    <div class="paintings-grid">
+```
+<div class="paintings-grid">
 
-      <div class="frame reveal reveal-delay-1">
-        <div class="frame-canvas">
-          <svg viewBox="0 0 120 160" width="80" height="107">
-            <ellipse cx="60" cy="50" rx="22" ry="26" stroke="#f5e8c0" stroke-width="1" fill="none"/>
-            <path d="M38,76 Q60,120 82,76" stroke="#f5e8c0" stroke-width="1" fill="none"/>
-            <path d="M45,90 Q60,160 75,90" stroke="#f5e8c0" stroke-width="0.8" fill="none"/>
-            <line x1="20" y1="95" x2="100" y2="95" stroke="#f5e8c0" stroke-width="0.5" opacity="0.4"/>
-            <path d="M10,160 Q30,100 60,76 Q90,100 110,160" stroke="#f5e8c0" stroke-width="0.7" fill="none"/>
-          </svg>
-        </div>
-        <p class="frame-title">La Gioconda</p>
-        <p class="frame-year">c. 1503–1519 · Oil on poplar</p>
-      </div>
-
-      <div class="frame reveal reveal-delay-2">
-        <div class="frame-canvas" style="aspect-ratio:16/9; background: linear-gradient(135deg,#b09070,#806040,#503020);">
-          <svg viewBox="0 0 200 120" width="140" height="84">
-            <!-- table line -->
-            <line x1="0" y1="80" x2="200" y2="80" stroke="#f5e8c0" stroke-width="0.7" opacity="0.5"/>
-            <!-- figures (13 silhouettes simplified) -->
-            <circle cx="100" cy="50" r="8" stroke="#f5e8c0" stroke-width="0.8" fill="none"/>
-            <circle cx="68"  cy="52" r="7" stroke="#f5e8c0" stroke-width="0.7" fill="none"/>
-            <circle cx="132" cy="52" r="7" stroke="#f5e8c0" stroke-width="0.7" fill="none"/>
-            <circle cx="44"  cy="54" r="6" stroke="#f5e8c0" stroke-width="0.6" fill="none"/>
-            <circle cx="156" cy="54" r="6" stroke="#f5e8c0" stroke-width="0.6" fill="none"/>
-            <circle cx="24"  cy="55" r="5" stroke="#f5e8c0" stroke-width="0.5" fill="none" opacity="0.7"/>
-            <circle cx="176" cy="55" r="5" stroke="#f5e8c0" stroke-width="0.5" fill="none" opacity="0.7"/>
-            <!-- arms gesturing -->
-            <line x1="100" y1="58" x2="80" y2="72" stroke="#f5e8c0" stroke-width="0.6"/>
-            <line x1="100" y1="58" x2="120" y2="72" stroke="#f5e8c0" stroke-width="0.6"/>
-            <!-- window -->
-            <rect x="82" y="10" width="36" height="35" stroke="#f5e8c0" stroke-width="0.5" fill="none" opacity="0.3"/>
-          </svg>
-        </div>
-        <p class="frame-title">L'Ultima Cena</p>
-        <p class="frame-year">c. 1495–1498 · Tempera on gesso</p>
-      </div>
-
-      <div class="frame reveal reveal-delay-3">
-        <div class="frame-canvas">
-          <svg viewBox="0 0 120 160" width="80" height="107">
-            <ellipse cx="60" cy="45" rx="20" ry="23" stroke="#f5e8c0" stroke-width="1" fill="none"/>
-            <path d="M40,68 Q60,110 80,68" stroke="#f5e8c0" stroke-width="1" fill="none"/>
-            <!-- orb -->
-            <circle cx="75" cy="100" r="14" stroke="#f5e8c0" stroke-width="0.8" fill="none"/>
-            <circle cx="75" cy="100" r="4" stroke="#f5e8c0" stroke-width="0.5" fill="none" opacity="0.5"/>
-            <!-- blessing hand -->
-            <path d="M52,78 L48,110 M56,78 L53,112 M60,80 L58,110 M64,82 L63,108"
-                  stroke="#f5e8c0" stroke-width="0.6" fill="none"/>
-          </svg>
-        </div>
-        <p class="frame-title">Salvator Mundi</p>
-        <p class="frame-year">c. 1499–1510 · Oil on panel</p>
-      </div>
-
-      <div class="frame reveal reveal-delay-4">
-        <div class="frame-canvas">
-          <svg viewBox="0 0 120 160" width="80" height="107">
-            <ellipse cx="60" cy="48" rx="19" ry="22" stroke="#f5e8c0" stroke-width="1" fill="none"/>
-            <path d="M41,70 Q60,115 79,70" stroke="#f5e8c0" stroke-width="1" fill="none"/>
-            <!-- ermine (simplified small animal) -->
-            <ellipse cx="40" cy="105" rx="14" ry="8" stroke="#f5e8c0" stroke-width="0.8" fill="none"/>
-            <ellipse cx="34" cy="96" rx="6" ry="7" stroke="#f5e8c0" stroke-width="0.7" fill="none"/>
-            <!-- hand cradling it -->
-            <path d="M41,85 Q35,98 28,102" stroke="#f5e8c0" stroke-width="0.7" fill="none"/>
-          </svg>
-        </div>
-        <p class="frame-title">Lady with an Ermine</p>
-        <p class="frame-year">c. 1489–1490 · Oil on walnut panel</p>
-      </div>
-
+  <div class="frame reveal reveal-delay-1">
+    <div class="frame-canvas">
+      <svg viewBox="0 0 120 160" width="80" height="107">
+        <ellipse cx="60" cy="50" rx="22" ry="26" stroke="#f5e8c0" stroke-width="1" fill="none"/>
+        <path d="M38,76 Q60,120 82,76" stroke="#f5e8c0" stroke-width="1" fill="none"/>
+        <path d="M45,90 Q60,160 75,90" stroke="#f5e8c0" stroke-width="0.8" fill="none"/>
+        <line x1="20" y1="95" x2="100" y2="95" stroke="#f5e8c0" stroke-width="0.5" opacity="0.4"/>
+        <path d="M10,160 Q30,100 60,76 Q90,100 110,160" stroke="#f5e8c0" stroke-width="0.7" fill="none"/>
+      </svg>
     </div>
+    <p class="frame-title">La Gioconda</p>
+    <p class="frame-year">c. 1503–1519 · Oil on poplar</p>
+  </div>
+
+  <div class="frame reveal reveal-delay-2">
+    <div class="frame-canvas" style="aspect-ratio:16/9; background: linear-gradient(135deg,#b09070,#806040,#503020);">
+      <svg viewBox="0 0 200 120" width="140" height="84">
+        <!-- table line -->
+        <line x1="0" y1="80" x2="200" y2="80" stroke="#f5e8c0" stroke-width="0.7" opacity="0.5"/>
+        <!-- figures (13 silhouettes simplified) -->
+        <circle cx="100" cy="50" r="8" stroke="#f5e8c0" stroke-width="0.8" fill="none"/>
+        <circle cx="68"  cy="52" r="7" stroke="#f5e8c0" stroke-width="0.7" fill="none"/>
+        <circle cx="132" cy="52" r="7" stroke="#f5e8c0" stroke-width="0.7" fill="none"/>
+        <circle cx="44"  cy="54" r="6" stroke="#f5e8c0" stroke-width="0.6" fill="none"/>
+        <circle cx="156" cy="54" r="6" stroke="#f5e8c0" stroke-width="0.6" fill="none"/>
+        <circle cx="24"  cy="55" r="5" stroke="#f5e8c0" stroke-width="0.5" fill="none" opacity="0.7"/>
+        <circle cx="176" cy="55" r="5" stroke="#f5e8c0" stroke-width="0.5" fill="none" opacity="0.7"/>
+        <!-- arms gesturing -->
+        <line x1="100" y1="58" x2="80" y2="72" stroke="#f5e8c0" stroke-width="0.6"/>
+        <line x1="100" y1="58" x2="120" y2="72" stroke="#f5e8c0" stroke-width="0.6"/>
+        <!-- window -->
+        <rect x="82" y="10" width="36" height="35" stroke="#f5e8c0" stroke-width="0.5" fill="none" opacity="0.3"/>
+      </svg>
+    </div>
+    <p class="frame-title">L'Ultima Cena</p>
+    <p class="frame-year">c. 1495–1498 · Tempera on gesso</p>
+  </div>
+
+  <div class="frame reveal reveal-delay-3">
+    <div class="frame-canvas">
+      <svg viewBox="0 0 120 160" width="80" height="107">
+        <ellipse cx="60" cy="45" rx="20" ry="23" stroke="#f5e8c0" stroke-width="1" fill="none"/>
+        <path d="M40,68 Q60,110 80,68" stroke="#f5e8c0" stroke-width="1" fill="none"/>
+        <!-- orb -->
+        <circle cx="75" cy="100" r="14" stroke="#f5e8c0" stroke-width="0.8" fill="none"/>
+        <circle cx="75" cy="100" r="4" stroke="#f5e8c0" stroke-width="0.5" fill="none" opacity="0.5"/>
+        <!-- blessing hand -->
+        <path d="M52,78 L48,110 M56,78 L53,112 M60,80 L58,110 M64,82 L63,108"
+              stroke="#f5e8c0" stroke-width="0.6" fill="none"/>
+      </svg>
+    </div>
+    <p class="frame-title">Salvator Mundi</p>
+    <p class="frame-year">c. 1499–1510 · Oil on panel</p>
+  </div>
+
+  <div class="frame reveal reveal-delay-4">
+    <div class="frame-canvas">
+      <svg viewBox="0 0 120 160" width="80" height="107">
+        <ellipse cx="60" cy="48" rx="19" ry="22" stroke="#f5e8c0" stroke-width="1" fill="none"/>
+        <path d="M41,70 Q60,115 79,70" stroke="#f5e8c0" stroke-width="1" fill="none"/>
+        <!-- ermine (simplified small animal) -->
+        <ellipse cx="40" cy="105" rx="14" ry="8" stroke="#f5e8c0" stroke-width="0.8" fill="none"/>
+        <ellipse cx="34" cy="96" rx="6" ry="7" stroke="#f5e8c0" stroke-width="0.7" fill="none"/>
+        <!-- hand cradling it -->
+        <path d="M41,85 Q35,98 28,102" stroke="#f5e8c0" stroke-width="0.7" fill="none"/>
+      </svg>
+    </div>
+    <p class="frame-title">Lady with an Ermine</p>
+    <p class="frame-year">c. 1489–1490 · Oil on walnut panel</p>
+  </div>
+
+</div>
+```
+
   </section>
 
   <!-- ═══════════════════════════════════════════
        ANATOMY & SCIENCE
   ════════════════════════════════════════════ -->
+
   <section id="anatomia">
     <p class="section-label reveal">II — Scienziato &amp; Anatomista</p>
     <h2 class="reveal reveal-delay-1">The Body as Universe</h2>
@@ -738,70 +788,74 @@
       "The noblest pleasure is the joy of understanding."
     </p>
 
-    <div class="notebook-grid">
+```
+<div class="notebook-grid">
 
-      <div class="notebook-page reveal reveal-delay-1">
-        <svg class="notebook-sketch" viewBox="0 0 160 100" width="100%">
-          <!-- Vitruvian man simplified -->
-          <circle cx="80" cy="50" r="45" stroke="#5a3a1a" stroke-width="1" fill="none"/>
-          <rect x="38" y="15" width="84" height="84" stroke="#5a3a1a" stroke-width="0.8" fill="none"/>
-          <ellipse cx="80" cy="22" rx="9" ry="10" stroke="#5a3a1a" stroke-width="0.8" fill="none"/>
-          <line x1="80" y1="32" x2="80" y2="72" stroke="#5a3a1a" stroke-width="0.8"/>
-          <line x1="35" y1="52" x2="125" y2="52" stroke="#5a3a1a" stroke-width="0.8"/>
-          <line x1="80" y1="72" x2="58" y2="96" stroke="#5a3a1a" stroke-width="0.8"/>
-          <line x1="80" y1="72" x2="102" y2="96" stroke="#5a3a1a" stroke-width="0.8"/>
-          <line x1="80" y1="72" x2="65" y2="99" stroke="#5a3a1a" stroke-width="0.6" opacity="0.5"/>
-          <line x1="80" y1="72" x2="95" y2="99" stroke="#5a3a1a" stroke-width="0.6" opacity="0.5"/>
-        </svg>
-        <p class="notebook-title">L'Uomo Vitruviano · 1490</p>
-        <p class="notebook-desc">Studies of the proportions of the human body in relation to architecture — a symbol of Leonardo's bridging of art and science, inspired by Vitruvius.</p>
-        <span class="codex-marginalia">Nota bene: la proporzione è la legge del cosmo.</span>
-      </div>
+  <div class="notebook-page reveal reveal-delay-1">
+    <svg class="notebook-sketch" viewBox="0 0 160 100" width="100%">
+      <!-- Vitruvian man simplified -->
+      <circle cx="80" cy="50" r="45" stroke="#5a3a1a" stroke-width="1" fill="none"/>
+      <rect x="38" y="15" width="84" height="84" stroke="#5a3a1a" stroke-width="0.8" fill="none"/>
+      <ellipse cx="80" cy="22" rx="9" ry="10" stroke="#5a3a1a" stroke-width="0.8" fill="none"/>
+      <line x1="80" y1="32" x2="80" y2="72" stroke="#5a3a1a" stroke-width="0.8"/>
+      <line x1="35" y1="52" x2="125" y2="52" stroke="#5a3a1a" stroke-width="0.8"/>
+      <line x1="80" y1="72" x2="58" y2="96" stroke="#5a3a1a" stroke-width="0.8"/>
+      <line x1="80" y1="72" x2="102" y2="96" stroke="#5a3a1a" stroke-width="0.8"/>
+      <line x1="80" y1="72" x2="65" y2="99" stroke="#5a3a1a" stroke-width="0.6" opacity="0.5"/>
+      <line x1="80" y1="72" x2="95" y2="99" stroke="#5a3a1a" stroke-width="0.6" opacity="0.5"/>
+    </svg>
+    <p class="notebook-title">L'Uomo Vitruviano · 1490</p>
+    <p class="notebook-desc">Studies of the proportions of the human body in relation to architecture — a symbol of Leonardo's bridging of art and science, inspired by Vitruvius.</p>
+    <span class="codex-marginalia">Nota bene: la proporzione è la legge del cosmo.</span>
+  </div>
 
-      <div class="notebook-page reveal reveal-delay-2">
-        <svg class="notebook-sketch" viewBox="0 0 160 100" width="100%">
-          <!-- heart sketch -->
-          <path d="M80,80 C60,60 30,50 35,30 C40,12 65,12 80,30 C95,12 120,12 125,30 C130,50 100,60 80,80Z"
-                stroke="#5a3a1a" stroke-width="1" fill="none"/>
-          <!-- vessels -->
-          <path d="M80,30 L80,10" stroke="#5a3a1a" stroke-width="0.7"/>
-          <path d="M65,22 L50,8" stroke="#5a3a1a" stroke-width="0.6"/>
-          <path d="M95,22 L110,8" stroke="#5a3a1a" stroke-width="0.6"/>
-          <path d="M80,80 L80,98" stroke="#5a3a1a" stroke-width="0.7"/>
-          <!-- annotation lines -->
-          <line x1="125" y1="30" x2="148" y2="25" stroke="#5a3a1a" stroke-width="0.4" stroke-dasharray="2,3"/>
-          <line x1="35"  y1="30" x2="12"  y2="25" stroke="#5a3a1a" stroke-width="0.4" stroke-dasharray="2,3"/>
-        </svg>
-        <p class="notebook-title">Anatomia del Cuore · c. 1511</p>
-        <p class="notebook-desc">Over 30 years, Leonardo dissected more than 30 human corpses, producing anatomical drawings of unprecedented accuracy. His studies of the heart anticipated modern cardiology.</p>
-        <span class="codex-marginalia">Il cuore non è la sede dell'anima, ma del sangue.</span>
-      </div>
+  <div class="notebook-page reveal reveal-delay-2">
+    <svg class="notebook-sketch" viewBox="0 0 160 100" width="100%">
+      <!-- heart sketch -->
+      <path d="M80,80 C60,60 30,50 35,30 C40,12 65,12 80,30 C95,12 120,12 125,30 C130,50 100,60 80,80Z"
+            stroke="#5a3a1a" stroke-width="1" fill="none"/>
+      <!-- vessels -->
+      <path d="M80,30 L80,10" stroke="#5a3a1a" stroke-width="0.7"/>
+      <path d="M65,22 L50,8" stroke="#5a3a1a" stroke-width="0.6"/>
+      <path d="M95,22 L110,8" stroke="#5a3a1a" stroke-width="0.6"/>
+      <path d="M80,80 L80,98" stroke="#5a3a1a" stroke-width="0.7"/>
+      <!-- annotation lines -->
+      <line x1="125" y1="30" x2="148" y2="25" stroke="#5a3a1a" stroke-width="0.4" stroke-dasharray="2,3"/>
+      <line x1="35"  y1="30" x2="12"  y2="25" stroke="#5a3a1a" stroke-width="0.4" stroke-dasharray="2,3"/>
+    </svg>
+    <p class="notebook-title">Anatomia del Cuore · c. 1511</p>
+    <p class="notebook-desc">Over 30 years, Leonardo dissected more than 30 human corpses, producing anatomical drawings of unprecedented accuracy. His studies of the heart anticipated modern cardiology.</p>
+    <span class="codex-marginalia">Il cuore non è la sede dell'anima, ma del sangue.</span>
+  </div>
 
-      <div class="notebook-page reveal reveal-delay-3">
-        <svg class="notebook-sketch" viewBox="0 0 160 100" width="100%">
-          <!-- fetus in womb -->
-          <ellipse cx="80" cy="52" rx="48" ry="42" stroke="#5a3a1a" stroke-width="1" fill="none"/>
-          <!-- inner fetal outline -->
-          <circle cx="80" cy="45" r="28" stroke="#5a3a1a" stroke-width="0.7" fill="none" stroke-dasharray="3,3"/>
-          <!-- fetal head -->
-          <circle cx="80" cy="35" r="12" stroke="#5a3a1a" stroke-width="0.9" fill="none"/>
-          <!-- body curled -->
-          <path d="M80,47 Q65,65 72,78 Q85,88 92,75 Q100,60 88,48"
-                stroke="#5a3a1a" stroke-width="0.8" fill="none"/>
-          <!-- cord -->
-          <path d="M80,47 Q95,50 98,42" stroke="#5a3a1a" stroke-width="0.5" stroke-dasharray="2,2"/>
-        </svg>
-        <p class="notebook-title">Il Feto nell'Utero · c. 1510</p>
-        <p class="notebook-desc">Among the most celebrated scientific drawings ever made — Leonardo's depiction of a fetus in the womb revealed anatomical structures not confirmed by science for centuries.</p>
-        <span class="codex-marginalia">L'uomo è la misura di tutte le cose viventi.</span>
-      </div>
+  <div class="notebook-page reveal reveal-delay-3">
+    <svg class="notebook-sketch" viewBox="0 0 160 100" width="100%">
+      <!-- fetus in womb -->
+      <ellipse cx="80" cy="52" rx="48" ry="42" stroke="#5a3a1a" stroke-width="1" fill="none"/>
+      <!-- inner fetal outline -->
+      <circle cx="80" cy="45" r="28" stroke="#5a3a1a" stroke-width="0.7" fill="none" stroke-dasharray="3,3"/>
+      <!-- fetal head -->
+      <circle cx="80" cy="35" r="12" stroke="#5a3a1a" stroke-width="0.9" fill="none"/>
+      <!-- body curled -->
+      <path d="M80,47 Q65,65 72,78 Q85,88 92,75 Q100,60 88,48"
+            stroke="#5a3a1a" stroke-width="0.8" fill="none"/>
+      <!-- cord -->
+      <path d="M80,47 Q95,50 98,42" stroke="#5a3a1a" stroke-width="0.5" stroke-dasharray="2,2"/>
+    </svg>
+    <p class="notebook-title">Il Feto nell'Utero · c. 1510</p>
+    <p class="notebook-desc">Among the most celebrated scientific drawings ever made — Leonardo's depiction of a fetus in the womb revealed anatomical structures not confirmed by science for centuries.</p>
+    <span class="codex-marginalia">L'uomo è la misura di tutte le cose viventi.</span>
+  </div>
 
-    </div>
+</div>
+```
+
   </section>
 
   <!-- ═══════════════════════════════════════════
        ENGINEERING
   ════════════════════════════════════════════ -->
+
   <section id="ingegneria">
     <p class="section-label reveal">III — Ingegnere &amp; Inventore</p>
     <h2 class="reveal reveal-delay-1">Machines Before Their Time</h2>
@@ -814,86 +868,90 @@
       "Iron rusts from disuse; water loses its purity from stagnation and in cold weather becomes frozen; even so does inaction sap the vigour of the mind."
     </p>
 
-    <div class="blueprint-grid">
+```
+<div class="blueprint-grid">
 
-      <div class="blueprint-card reveal reveal-delay-1">
-        <svg class="blueprint-icon" viewBox="0 0 80 80" width="64" height="64">
-          <!-- ornithopter -->
-          <line x1="40" y1="40" x2="40" y2="65" stroke="#b8922a" stroke-width="1.2"/>
-          <path d="M40,40 Q10,20 2,35 Q15,45 40,40" stroke="#b8922a" stroke-width="1" fill="none"/>
-          <path d="M40,40 Q70,20 78,35 Q65,45 40,40" stroke="#b8922a" stroke-width="1" fill="none"/>
-          <ellipse cx="40" cy="38" rx="5" ry="7" stroke="#b8922a" stroke-width="0.8" fill="none"/>
-          <path d="M38,45 Q35,55 30,62 M42,45 Q45,55 50,62" stroke="#b8922a" stroke-width="0.7" fill="none"/>
-        </svg>
-        <p class="blueprint-name">Ornitottero · Flying Machine</p>
-        <p class="blueprint-desc">An ornithopter with wings modelled on bird anatomy. Designed to be powered by human muscle, anticipating modern aviation by 400 years.</p>
-        <span class="blueprint-label">Codex Atlanticus · f.858r</span>
-      </div>
+  <div class="blueprint-card reveal reveal-delay-1">
+    <svg class="blueprint-icon" viewBox="0 0 80 80" width="64" height="64">
+      <!-- ornithopter -->
+      <line x1="40" y1="40" x2="40" y2="65" stroke="#b8922a" stroke-width="1.2"/>
+      <path d="M40,40 Q10,20 2,35 Q15,45 40,40" stroke="#b8922a" stroke-width="1" fill="none"/>
+      <path d="M40,40 Q70,20 78,35 Q65,45 40,40" stroke="#b8922a" stroke-width="1" fill="none"/>
+      <ellipse cx="40" cy="38" rx="5" ry="7" stroke="#b8922a" stroke-width="0.8" fill="none"/>
+      <path d="M38,45 Q35,55 30,62 M42,45 Q45,55 50,62" stroke="#b8922a" stroke-width="0.7" fill="none"/>
+    </svg>
+    <p class="blueprint-name">Ornitottero · Flying Machine</p>
+    <p class="blueprint-desc">An ornithopter with wings modelled on bird anatomy. Designed to be powered by human muscle, anticipating modern aviation by 400 years.</p>
+    <span class="blueprint-label">Codex Atlanticus · f.858r</span>
+  </div>
 
-      <div class="blueprint-card reveal reveal-delay-2">
-        <svg class="blueprint-icon" viewBox="0 0 80 80" width="64" height="64">
-          <!-- armored vehicle (tank) -->
-          <ellipse cx="40" cy="48" rx="32" ry="14" stroke="#b8922a" stroke-width="1" fill="none"/>
-          <ellipse cx="40" cy="38" rx="18" ry="8" stroke="#b8922a" stroke-width="0.8" fill="none"/>
-          <!-- wheels -->
-          <circle cx="16" cy="55" r="7" stroke="#b8922a" stroke-width="0.7" fill="none"/>
-          <circle cx="40" cy="57" r="7" stroke="#b8922a" stroke-width="0.7" fill="none"/>
-          <circle cx="64" cy="55" r="7" stroke="#b8922a" stroke-width="0.7" fill="none"/>
-          <!-- cannons -->
-          <line x1="8"  y1="48" x2="2"  y2="44" stroke="#b8922a" stroke-width="0.9"/>
-          <line x1="72" y1="48" x2="78" y2="44" stroke="#b8922a" stroke-width="0.9"/>
-          <line x1="40" y1="30" x2="40" y2="22" stroke="#b8922a" stroke-width="0.9"/>
-        </svg>
-        <p class="blueprint-name">Carro Armato · Armored Vehicle</p>
-        <p class="blueprint-desc">A covered assault vehicle with angled plating to deflect cannon fire — a precursor to the modern tank, designed for Ludovico Sforza around 1487.</p>
-        <span class="blueprint-label">British Museum Ms. · 1487</span>
-      </div>
+  <div class="blueprint-card reveal reveal-delay-2">
+    <svg class="blueprint-icon" viewBox="0 0 80 80" width="64" height="64">
+      <!-- armored vehicle (tank) -->
+      <ellipse cx="40" cy="48" rx="32" ry="14" stroke="#b8922a" stroke-width="1" fill="none"/>
+      <ellipse cx="40" cy="38" rx="18" ry="8" stroke="#b8922a" stroke-width="0.8" fill="none"/>
+      <!-- wheels -->
+      <circle cx="16" cy="55" r="7" stroke="#b8922a" stroke-width="0.7" fill="none"/>
+      <circle cx="40" cy="57" r="7" stroke="#b8922a" stroke-width="0.7" fill="none"/>
+      <circle cx="64" cy="55" r="7" stroke="#b8922a" stroke-width="0.7" fill="none"/>
+      <!-- cannons -->
+      <line x1="8"  y1="48" x2="2"  y2="44" stroke="#b8922a" stroke-width="0.9"/>
+      <line x1="72" y1="48" x2="78" y2="44" stroke="#b8922a" stroke-width="0.9"/>
+      <line x1="40" y1="30" x2="40" y2="22" stroke="#b8922a" stroke-width="0.9"/>
+    </svg>
+    <p class="blueprint-name">Carro Armato · Armored Vehicle</p>
+    <p class="blueprint-desc">A covered assault vehicle with angled plating to deflect cannon fire — a precursor to the modern tank, designed for Ludovico Sforza around 1487.</p>
+    <span class="blueprint-label">British Museum Ms. · 1487</span>
+  </div>
 
-      <div class="blueprint-card reveal reveal-delay-3">
-        <svg class="blueprint-icon" viewBox="0 0 80 80" width="64" height="64">
-          <!-- self-propelled cart -->
-          <rect x="20" y="35" width="40" height="20" stroke="#b8922a" stroke-width="1" fill="none" rx="2"/>
-          <!-- spring mechanism hint -->
-          <path d="M30,35 Q35,25 40,35 Q45,25 50,35" stroke="#b8922a" stroke-width="0.8" fill="none"/>
-          <!-- wheels -->
-          <circle cx="22" cy="55" r="9" stroke="#b8922a" stroke-width="0.9" fill="none"/>
-          <circle cx="58" cy="55" r="9" stroke="#b8922a" stroke-width="0.9" fill="none"/>
-          <circle cx="22" cy="55" r="3" stroke="#b8922a" stroke-width="0.5" fill="none"/>
-          <circle cx="58" cy="55" r="3" stroke="#b8922a" stroke-width="0.5" fill="none"/>
-          <!-- axle -->
-          <line x1="22" y1="55" x2="58" y2="55" stroke="#b8922a" stroke-width="0.5" stroke-dasharray="3,3"/>
-        </svg>
-        <p class="blueprint-name">Carro Semovente · Self-Propelled Cart</p>
-        <p class="blueprint-desc">Often considered the world's first programmable robot — a spring-driven cart with a pre-set steering mechanism, the ancestor of the automobile.</p>
-        <span class="blueprint-label">Codex Atlanticus · c. 1478</span>
-      </div>
+  <div class="blueprint-card reveal reveal-delay-3">
+    <svg class="blueprint-icon" viewBox="0 0 80 80" width="64" height="64">
+      <!-- self-propelled cart -->
+      <rect x="20" y="35" width="40" height="20" stroke="#b8922a" stroke-width="1" fill="none" rx="2"/>
+      <!-- spring mechanism hint -->
+      <path d="M30,35 Q35,25 40,35 Q45,25 50,35" stroke="#b8922a" stroke-width="0.8" fill="none"/>
+      <!-- wheels -->
+      <circle cx="22" cy="55" r="9" stroke="#b8922a" stroke-width="0.9" fill="none"/>
+      <circle cx="58" cy="55" r="9" stroke="#b8922a" stroke-width="0.9" fill="none"/>
+      <circle cx="22" cy="55" r="3" stroke="#b8922a" stroke-width="0.5" fill="none"/>
+      <circle cx="58" cy="55" r="3" stroke="#b8922a" stroke-width="0.5" fill="none"/>
+      <!-- axle -->
+      <line x1="22" y1="55" x2="58" y2="55" stroke="#b8922a" stroke-width="0.5" stroke-dasharray="3,3"/>
+    </svg>
+    <p class="blueprint-name">Carro Semovente · Self-Propelled Cart</p>
+    <p class="blueprint-desc">Often considered the world's first programmable robot — a spring-driven cart with a pre-set steering mechanism, the ancestor of the automobile.</p>
+    <span class="blueprint-label">Codex Atlanticus · c. 1478</span>
+  </div>
 
-      <div class="blueprint-card reveal reveal-delay-4">
-        <svg class="blueprint-icon" viewBox="0 0 80 80" width="64" height="64">
-          <!-- aerial screw / helicopter -->
-          <line x1="40" y1="50" x2="40" y2="22" stroke="#b8922a" stroke-width="1.2"/>
-          <ellipse cx="40" cy="28" rx="30" ry="8" stroke="#b8922a" stroke-width="1" fill="none"/>
-          <!-- spiral lines on screw -->
-          <path d="M10,28 Q25,20 40,28 Q55,36 70,28" stroke="#b8922a" stroke-width="0.6" fill="none" opacity="0.5"/>
-          <!-- base platform -->
-          <rect x="28" y="50" width="24" height="6" stroke="#b8922a" stroke-width="0.8" fill="none"/>
-          <!-- supports -->
-          <line x1="28" y1="56" x2="18" y2="68" stroke="#b8922a" stroke-width="0.7"/>
-          <line x1="52" y1="56" x2="62" y2="68" stroke="#b8922a" stroke-width="0.7"/>
-          <line x1="28" y1="56" x2="36" y2="68" stroke="#b8922a" stroke-width="0.7"/>
-          <line x1="52" y1="56" x2="44" y2="68" stroke="#b8922a" stroke-width="0.7"/>
-        </svg>
-        <p class="blueprint-name">Vite Aerea · Aerial Screw</p>
-        <p class="blueprint-desc">A helical aerial screw intended to compress air and achieve flight — a conceptual predecessor to the modern helicopter, conceived around 1489.</p>
-        <span class="blueprint-label">Paris Ms. B · f.83v · 1489</span>
-      </div>
+  <div class="blueprint-card reveal reveal-delay-4">
+    <svg class="blueprint-icon" viewBox="0 0 80 80" width="64" height="64">
+      <!-- aerial screw / helicopter -->
+      <line x1="40" y1="50" x2="40" y2="22" stroke="#b8922a" stroke-width="1.2"/>
+      <ellipse cx="40" cy="28" rx="30" ry="8" stroke="#b8922a" stroke-width="1" fill="none"/>
+      <!-- spiral lines on screw -->
+      <path d="M10,28 Q25,20 40,28 Q55,36 70,28" stroke="#b8922a" stroke-width="0.6" fill="none" opacity="0.5"/>
+      <!-- base platform -->
+      <rect x="28" y="50" width="24" height="6" stroke="#b8922a" stroke-width="0.8" fill="none"/>
+      <!-- supports -->
+      <line x1="28" y1="56" x2="18" y2="68" stroke="#b8922a" stroke-width="0.7"/>
+      <line x1="52" y1="56" x2="62" y2="68" stroke="#b8922a" stroke-width="0.7"/>
+      <line x1="28" y1="56" x2="36" y2="68" stroke="#b8922a" stroke-width="0.7"/>
+      <line x1="52" y1="56" x2="44" y2="68" stroke="#b8922a" stroke-width="0.7"/>
+    </svg>
+    <p class="blueprint-name">Vite Aerea · Aerial Screw</p>
+    <p class="blueprint-desc">A helical aerial screw intended to compress air and achieve flight — a conceptual predecessor to the modern helicopter, conceived around 1489.</p>
+    <span class="blueprint-label">Paris Ms. B · f.83v · 1489</span>
+  </div>
 
-    </div>
+</div>
+```
+
   </section>
 
   <!-- ═══════════════════════════════════════════
        ARCHITECTURE
   ════════════════════════════════════════════ -->
+
   <section id="architettura">
     <p class="section-label reveal">IV — Architetto &amp; Urbanista</p>
     <h2 class="reveal reveal-delay-1">The Ideal City</h2>
@@ -902,66 +960,70 @@
             stroke="#b8922a" stroke-width="0.8" fill="none" opacity="0.6"/>
     </svg>
 
-    <div class="arch-quote reveal reveal-delay-1">
-      "Beauty perishes in life, but is immortal in art."
-    </div>
+```
+<div class="arch-quote reveal reveal-delay-1">
+  "Beauty perishes in life, but is immortal in art."
+</div>
 
-    <p class="arch-body reveal reveal-delay-2">
-      Following the plague of 1484–1485 that killed a third of Milan's population, Leonardo conceived
-      of a radical <em>Città Ideale</em> — a multi-level urban system separating pedestrians from
-      goods vehicles, with canals for sanitation and ventilation. His architectural studies included
-      domed churches, centrally-planned chapels, and structural innovations centuries ahead of their time.
-    </p>
+<p class="arch-body reveal reveal-delay-2">
+  Following the plague of 1484–1485 that killed a third of Milan's population, Leonardo conceived
+  of a radical <em>Città Ideale</em> — a multi-level urban system separating pedestrians from
+  goods vehicles, with canals for sanitation and ventilation. His architectural studies included
+  domed churches, centrally-planned chapels, and structural innovations centuries ahead of their time.
+</p>
 
-    <div class="arch-drawings reveal reveal-delay-3">
+<div class="arch-drawings reveal reveal-delay-3">
 
-      <div class="arch-drawing">
-        <svg viewBox="0 0 200 160" width="100%" style="max-width:280px">
-          <!-- dome church plan -->
-          <circle cx="100" cy="80" r="55" stroke="#3b2a1a" stroke-width="1" fill="none"/>
-          <circle cx="100" cy="80" r="30" stroke="#3b2a1a" stroke-width="0.8" fill="none"/>
-          <circle cx="100" cy="80" r="8"  stroke="#3b2a1a" stroke-width="0.7" fill="none"/>
-          <!-- cross arms -->
-          <rect x="88" y="25" width="24" height="110" stroke="#3b2a1a" stroke-width="0.7" fill="none"/>
-          <rect x="45" y="68" width="110" height="24" stroke="#3b2a1a" stroke-width="0.7" fill="none"/>
-          <!-- chapels -->
-          <circle cx="100" cy="25" r="10" stroke="#3b2a1a" stroke-width="0.6" fill="none"/>
-          <circle cx="100" cy="135" r="10" stroke="#3b2a1a" stroke-width="0.6" fill="none"/>
-          <circle cx="45"  cy="80" r="10" stroke="#3b2a1a" stroke-width="0.6" fill="none"/>
-          <circle cx="155" cy="80" r="10" stroke="#3b2a1a" stroke-width="0.6" fill="none"/>
-          <text x="100" y="165" font-family="Cinzel" font-size="8" fill="#5a3a1a" text-anchor="middle">Pianta di chiesa · c.1490</text>
-        </svg>
-      </div>
+  <div class="arch-drawing">
+    <svg viewBox="0 0 200 160" width="100%" style="max-width:280px">
+      <!-- dome church plan -->
+      <circle cx="100" cy="80" r="55" stroke="#3b2a1a" stroke-width="1" fill="none"/>
+      <circle cx="100" cy="80" r="30" stroke="#3b2a1a" stroke-width="0.8" fill="none"/>
+      <circle cx="100" cy="80" r="8"  stroke="#3b2a1a" stroke-width="0.7" fill="none"/>
+      <!-- cross arms -->
+      <rect x="88" y="25" width="24" height="110" stroke="#3b2a1a" stroke-width="0.7" fill="none"/>
+      <rect x="45" y="68" width="110" height="24" stroke="#3b2a1a" stroke-width="0.7" fill="none"/>
+      <!-- chapels -->
+      <circle cx="100" cy="25" r="10" stroke="#3b2a1a" stroke-width="0.6" fill="none"/>
+      <circle cx="100" cy="135" r="10" stroke="#3b2a1a" stroke-width="0.6" fill="none"/>
+      <circle cx="45"  cy="80" r="10" stroke="#3b2a1a" stroke-width="0.6" fill="none"/>
+      <circle cx="155" cy="80" r="10" stroke="#3b2a1a" stroke-width="0.6" fill="none"/>
+      <text x="100" y="165" font-family="Cinzel" font-size="8" fill="#5a3a1a" text-anchor="middle">Pianta di chiesa · c.1490</text>
+    </svg>
+  </div>
 
-      <div class="arch-drawing">
-        <svg viewBox="0 0 200 160" width="100%" style="max-width:280px">
-          <!-- city elevation sketch -->
-          <!-- lower street level -->
-          <rect x="0"   y="110" width="200" height="6" stroke="#3b2a1a" stroke-width="0.8" fill="none"/>
-          <!-- upper walkway -->
-          <rect x="0"   y="80"  width="200" height="4" stroke="#3b2a1a" stroke-width="0.7" fill="none" stroke-dasharray="4,4"/>
-          <!-- buildings -->
-          <rect x="20"  y="60"  width="30" height="50" stroke="#3b2a1a" stroke-width="0.8" fill="none"/>
-          <rect x="65"  y="40"  width="25" height="70" stroke="#3b2a1a" stroke-width="0.8" fill="none"/>
-          <rect x="105" y="55"  width="35" height="55" stroke="#3b2a1a" stroke-width="0.8" fill="none"/>
-          <rect x="155" y="70"  width="25" height="40" stroke="#3b2a1a" stroke-width="0.8" fill="none"/>
-          <!-- arches (lower) -->
-          <path d="M20,116 Q35,100 50,116" stroke="#3b2a1a" stroke-width="0.7" fill="none"/>
-          <path d="M65,116 Q77,100 90,116" stroke="#3b2a1a" stroke-width="0.7" fill="none"/>
-          <path d="M105,116 Q122,100 140,116" stroke="#3b2a1a" stroke-width="0.7" fill="none"/>
-          <path d="M155,116 Q167,100 180,116" stroke="#3b2a1a" stroke-width="0.7" fill="none"/>
-          <!-- canal hint -->
-          <path d="M0,130 Q100,125 200,130" stroke="#3b2a1a" stroke-width="0.5" fill="none" stroke-dasharray="3,3"/>
-          <text x="100" y="150" font-family="Cinzel" font-size="8" fill="#5a3a1a" text-anchor="middle">Città ideale · c.1487</text>
-        </svg>
-      </div>
+  <div class="arch-drawing">
+    <svg viewBox="0 0 200 160" width="100%" style="max-width:280px">
+      <!-- city elevation sketch -->
+      <!-- lower street level -->
+      <rect x="0"   y="110" width="200" height="6" stroke="#3b2a1a" stroke-width="0.8" fill="none"/>
+      <!-- upper walkway -->
+      <rect x="0"   y="80"  width="200" height="4" stroke="#3b2a1a" stroke-width="0.7" fill="none" stroke-dasharray="4,4"/>
+      <!-- buildings -->
+      <rect x="20"  y="60"  width="30" height="50" stroke="#3b2a1a" stroke-width="0.8" fill="none"/>
+      <rect x="65"  y="40"  width="25" height="70" stroke="#3b2a1a" stroke-width="0.8" fill="none"/>
+      <rect x="105" y="55"  width="35" height="55" stroke="#3b2a1a" stroke-width="0.8" fill="none"/>
+      <rect x="155" y="70"  width="25" height="40" stroke="#3b2a1a" stroke-width="0.8" fill="none"/>
+      <!-- arches (lower) -->
+      <path d="M20,116 Q35,100 50,116" stroke="#3b2a1a" stroke-width="0.7" fill="none"/>
+      <path d="M65,116 Q77,100 90,116" stroke="#3b2a1a" stroke-width="0.7" fill="none"/>
+      <path d="M105,116 Q122,100 140,116" stroke="#3b2a1a" stroke-width="0.7" fill="none"/>
+      <path d="M155,116 Q167,100 180,116" stroke="#3b2a1a" stroke-width="0.7" fill="none"/>
+      <!-- canal hint -->
+      <path d="M0,130 Q100,125 200,130" stroke="#3b2a1a" stroke-width="0.5" fill="none" stroke-dasharray="3,3"/>
+      <text x="100" y="150" font-family="Cinzel" font-size="8" fill="#5a3a1a" text-anchor="middle">Città ideale · c.1487</text>
+    </svg>
+  </div>
 
-    </div>
+</div>
+```
+
   </section>
 
   <!-- ═══════════════════════════════════════════
        MUSIC & WRITING
   ════════════════════════════════════════════ -->
+
   <section id="musica">
     <p class="section-label reveal">V — Musicista &amp; Scrittore</p>
     <h2 class="reveal reveal-delay-1">Words, Sound &amp; Thought</h2>
@@ -973,39 +1035,43 @@
       "Music is the shaping of the invisible."
     </p>
 
-    <div class="codex-spread reveal reveal-delay-3">
-      <div class="codex-page">
-        <p class="codex-heading">De Musica &amp; Strumenti</p>
-        <p class="codex-text">
-          Leonardo was celebrated throughout the courts of Italy as much for his musicianship as his painting.
-          He played the lira da braccio with virtuosic skill and arrived at the court of Milan bearing not
-          an easel, but a silver lute fashioned in the shape of a horse's skull — an instrument of his own
-          invention.<br><br>
-          He designed numerous new instruments, studied acoustics, and understood sound as a form of
-          energy moving through air — decades before such concepts were formalised.
-        </p>
-        <span class="codex-marginalia">Ogni suono è figura nell'aria invisibile.</span>
-      </div>
-      <div class="codex-page">
-        <p class="codex-heading">I Codici · Notebooks</p>
-        <p class="codex-text">
-          Leonardo left behind approximately 7,200 pages of notes and drawings — an encyclopaedia of
-          the known and imagined world, written in his distinctive mirror script from right to left.<br><br>
-          <em>Codex Leicester</em> — geology, water, and celestial bodies.<br>
-          <em>Codex Atlanticus</em> — machines, weapons, flying devices.<br>
-          <em>Codex Arundel</em> — architecture, geometry, philosophy.<br>
-          <em>Codex Windsor</em> — anatomy and natural studies.
-        </p>
-        <span class="codex-marginalia" style="transform:scaleX(-1) rotate(-1deg); display:inline-block;">
-          Scrivo ciò che vedo, vedo ciò che nessuno ha visto ancora.
-        </span>
-      </div>
-    </div>
+```
+<div class="codex-spread reveal reveal-delay-3">
+  <div class="codex-page">
+    <p class="codex-heading">De Musica &amp; Strumenti</p>
+    <p class="codex-text">
+      Leonardo was celebrated throughout the courts of Italy as much for his musicianship as his painting.
+      He played the lira da braccio with virtuosic skill and arrived at the court of Milan bearing not
+      an easel, but a silver lute fashioned in the shape of a horse's skull — an instrument of his own
+      invention.<br><br>
+      He designed numerous new instruments, studied acoustics, and understood sound as a form of
+      energy moving through air — decades before such concepts were formalised.
+    </p>
+    <span class="codex-marginalia">Ogni suono è figura nell'aria invisibile.</span>
+  </div>
+  <div class="codex-page">
+    <p class="codex-heading">I Codici · Notebooks</p>
+    <p class="codex-text">
+      Leonardo left behind approximately 7,200 pages of notes and drawings — an encyclopaedia of
+      the known and imagined world, written in his distinctive mirror script from right to left.<br><br>
+      <em>Codex Leicester</em> — geology, water, and celestial bodies.<br>
+      <em>Codex Atlanticus</em> — machines, weapons, flying devices.<br>
+      <em>Codex Arundel</em> — architecture, geometry, philosophy.<br>
+      <em>Codex Windsor</em> — anatomy and natural studies.
+    </p>
+    <span class="codex-marginalia" style="transform:scaleX(-1) rotate(-1deg); display:inline-block;">
+      Scrivo ciò che vedo, vedo ciò che nessuno ha visto ancora.
+    </span>
+  </div>
+</div>
+```
+
   </section>
 
   <!-- ═══════════════════════════════════════════
        CLOSING / PHILOSOPHY
   ════════════════════════════════════════════ -->
+
   <section id="filosofia">
     <div class="closing-quote reveal">
       "Learning never exhausts the mind."
@@ -1037,5 +1103,6 @@
       }, 200);
     });
   </script>
+
 </body>
 </html>
